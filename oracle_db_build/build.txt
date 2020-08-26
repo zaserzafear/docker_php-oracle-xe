@@ -1,0 +1,1 @@
+./buildDockerImage.sh -v 11.2.0.2 -x

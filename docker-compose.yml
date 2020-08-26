@@ -1,0 +1,33 @@
+version: "3"
+services:
+  oracle_db:
+    build: ./oracle_db_build
+    shm_size: 1gb
+    container_name: oracle_db
+    environment:
+      - TZ=Asia/Bangkok
+      - ORACLE_ALLOW_REMOTE=true
+      - ORACLE_DISABLE_ASYNCH_IO=true
+      - ORACLE_ENABLE_XDB=true
+      - ORACLE_PWD=oracle
+    volumes:
+      - ./oracle_db/app/oradata:/u01/app/oracle/oradata
+      - ./oracle_db/app/scripts/startup:/u01/app/scripts/startup
+      - ./oracle_db/app/scripts/setup:/u01/app/oracle/scripts/setup
+      - ./oracle_db/data/:/u01/app/oracle/admin/XE/dpdump/
+    ports:
+      - "1521:1521"
+      - "8080:8080"
+    restart: always
+
+  web_learn:
+    build: ./php7
+    container_name: web_learn
+    environment:
+      TZ: Asia/Bangkok
+      PMA_HOST: oracle_db
+    volumes:
+      - ./html/:/var/www/html
+    ports:
+      - "80:80"
+    restart: always
